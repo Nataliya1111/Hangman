@@ -1,23 +1,26 @@
 
 import java.util.List;
+import java.util.Scanner;
 import java.util.ArrayList;
 
 public class Game {
 	
-	String word;
+	private final String word;
+	private Scanner sc;
+	private final WordGuessingProcess guessing;
+	private int currentMistakes;
+	private char[] guessedLetters;
+	private List<String> wrongLetters = new ArrayList<>();
+	private GameStatus gameStatus;
 	
-	Game(String word){
+	public Game(String word, Scanner sc){
 		this.word = word.toUpperCase();
-	}
+		this.sc = sc;
+		this.guessing = new WordGuessingProcess(this.word);
+		this.guessedLetters = guessing.makeEmptyLetters();
+	}	
 	
-	
-	void gameloop() {
-		
-		WordGuessingProcess guessing = new WordGuessingProcess(this.word);	
-		int currentMistakes = 0;		
-		char[] guessedLetters = guessing.makeEmptyLetters();
-		List<String> wrongLetters = new ArrayList<>();
-		GameStatus gameStatus;
+	public void loop() {
 
 		Printing.printHangman(currentMistakes); 
 		System.out.printf("Необходимо отгадать слово из %d букв\n", word.length());
@@ -28,8 +31,8 @@ public class Game {
 			String inputLetter;
 			
 			do {				
-				inputLetter = Main.sc.nextLine().toUpperCase();						
-			} while (!guessing.inputIsValid(inputLetter, guessedLetters, wrongLetters));
+				inputLetter = sc.nextLine().toUpperCase();						
+			} while (isInputNotValid(inputLetter));
 			
 			char checkingLetter = inputLetter.charAt(0);
 			
@@ -54,5 +57,9 @@ public class Game {
 		Printing.printGameStatus(gameStatus, this.word);
 		
 	}	
+	
+	private boolean isInputNotValid(String inputLetter) {
+		return !guessing.isInputValid(inputLetter, guessedLetters, wrongLetters);
+	}
 
 }

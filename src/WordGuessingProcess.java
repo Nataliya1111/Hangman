@@ -3,44 +3,43 @@ import java.util.Arrays;
 import java.util.List;
 
 public class WordGuessingProcess { 
-	String word;
-	int wordLength;
-	static final int maxMistakes = 6;
+	private String word;
+	private int wordLength;
+	private static final char MASKED_LETTER = '_';
+	private static final int MAX_MISTAKES = 6;
 	
 	public WordGuessingProcess(String word) {
 		this.word = word;
 		this.wordLength = word.length();
 	}
 	
-	char[] makeEmptyLetters() {
+	public char[] makeEmptyLetters() {
 		
 		char[] guessedLetters = new char[wordLength];		
 	
 		for (int i = 0; i < wordLength; i++) {
-			guessedLetters[i] = '_';			
+			guessedLetters[i] = MASKED_LETTER;			
 		}		
 		return guessedLetters;
 	}	
 	
-	boolean inputIsValid(String letter, char[] guessedLetters, List<String> wrongLetters) {
+	public boolean isInputValid(String letter, char[] guessedLetters, List<String> wrongLetters) {
 		if(letter.length()!=1) {
 			System.out.println("Необходимо ввести одну букву");
 			return false;			
 		}
-		else if((letter.charAt(0)<(int)'А')||(letter.charAt(0)>(int)'Я')) {
+		if((letter.charAt(0)<'А')||(letter.charAt(0)>'Я')) {
 			System.out.println("Необходимо ввести букву руссого алфавита");
 			return false;
 		}
-		else if(Arrays.toString(guessedLetters).contains(String.valueOf(letter)) || wrongLetters.contains(letter)) {
+		if(Arrays.toString(guessedLetters).contains(String.valueOf(letter)) || wrongLetters.contains(letter)) {
 			System.out.println("Такая буква уже была. Введите другую букву");
 			return false;
 		}
-		else {
-			return true;
-		}
+		return true;
 	}
 	
-	char[] makeGuessedLetters(char checkingLetter, char[] guessedLetters) {
+	public char[] makeGuessedLetters(char checkingLetter, char[] guessedLetters) {
 		
 		char[] wordLetters = word.toCharArray();
 		
@@ -52,11 +51,11 @@ public class WordGuessingProcess {
 		return guessedLetters;
 	}
 
-	GameStatus makeGameStatus(int currentMistakes, char[] guessedLetters) {
-		if(currentMistakes == 6) {			
+	public GameStatus makeGameStatus(int currentMistakes, char[] guessedLetters) {
+		if(currentMistakes == MAX_MISTAKES) {			
 			return GameStatus.PLAYER_LOST;
 		}
-		else if(!String.valueOf(guessedLetters).contains("_")){			
+		else if(!String.valueOf(guessedLetters).contains(String.valueOf(MASKED_LETTER))){			
 			return GameStatus.PLAYER_WON;
 		}
 		else {

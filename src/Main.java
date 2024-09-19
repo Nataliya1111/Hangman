@@ -1,58 +1,39 @@
 
-import java.util.List;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class Main {
 	
-	static Scanner sc = new Scanner(System.in);
+	private static final String COMMAND_PLAY = "ДА";
+	private static final String COMMAND_EXIT = "НЕТ";
+	private static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) {
 		
 		System.out.println("ВИСЕЛИЦА\n");
 		
-		Path dictionaryPath = Path.of("src\\resources\\Dictionary.txt");
-		List<String> allDictionaryWords = new ArrayList<>();
+		String filename = "Dictionary.txt";		
+		Dictionary listOfWords = new Dictionary(filename);	
 		
-		try {
-			allDictionaryWords = Files.readAllLines(dictionaryPath);
-		} catch (IOException e) {			
-			e.printStackTrace();
-		}
-		
-		List<String> words = new ArrayList<>();
-		
-		for(String word : allDictionaryWords) {
-			if (word.length() >= 6) {
-				words.add(word);
-			};
-		}
+		listOfWords.makeListOfWordsFromFile(filename);
 	
-		String wantToPlay;
+		String wantToPlay;		
 		
 		do {
-			System.out.println("Хотите начать новую игру? (введите да/нет)");
+			System.out.printf("Хотите начать новую игру? (введите %s/%s)\n", COMMAND_PLAY,COMMAND_EXIT);
 			wantToPlay = sc.nextLine().toUpperCase();
 		
-			while (wantToPlay.equals("ДА")) {
-				Random random = new Random();
-				String word = words.get(random.nextInt(words.size()));
-				Game game = new Game(word);
-				game.gameloop();
+			while (wantToPlay.equals(COMMAND_PLAY)) {				
+				String word = listOfWords.getRandomWord(6, 12);
+				Game game = new Game(word, sc);
+				game.loop();
 				wantToPlay = "";
 			}	
 			
-		}while(!(wantToPlay.equals("ДА")||wantToPlay.equals("НЕТ")));
-
+		}while(!(wantToPlay.equals(COMMAND_PLAY)||wantToPlay.equals(COMMAND_EXIT)));
 		
 		System.out.println("До свидания!");
 		
 		sc.close();
 
 	}
-
 }
