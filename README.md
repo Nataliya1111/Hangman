@@ -33,13 +33,19 @@ cd Hangman
 4. Скомпилируйте программу
 
 ```
-javac -d bin src/*.java
+javac src/*.java -d classes
 ```
 
-5. Запустите игру
+5. Создайте jar файл
 
 ```
-java -classpath ./bin Main
+jar -cvfm Hangman.jar resources/META-INF/MANIFEST.MF -C classes . -C resources Dictionary.txt
+```
+
+6. Запустите игру
+
+```
+java -jar Hangman.jar
 ```
 
 ---
